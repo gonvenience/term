@@ -7,5 +7,5 @@ require (
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/onsi/ginkgo v1.15.0
 	github.com/onsi/gomega v1.10.5
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	golang.org/x/term v0.0.0-20201117132131-f5c789dd3221
 )

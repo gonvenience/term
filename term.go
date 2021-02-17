@@ -30,7 +30,7 @@ import (
 
 	"github.com/mattn/go-isatty"
 	"github.com/mitchellh/go-ps"
-	"golang.org/x/crypto/ssh/terminal"
+	terminal "golang.org/x/term"
 )
 
 const (
