@@ -126,7 +126,7 @@ func IsTrueColor() bool {
 // IsGardenContainer returns whether the current process is started in the
 // process tree of garden container (https://github.com/cloudfoundry/garden).
 func IsGardenContainer() bool {
-	if process, err := ps.FindProcess(1); err == nil {
+	if process, err := ps.FindProcess(1); err == nil && process != nil {
 		switch process.Executable() {
 		case "garden-init":
 			return true
