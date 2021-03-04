@@ -21,6 +21,8 @@
 package term_test
 
 import (
+	"bytes"
+	"io"
 	"os"
 
 	. "github.com/onsi/ginkgo"
@@ -29,23 +31,83 @@ import (
 	. "github.com/gonvenience/term"
 )
 
+func WithCustomEnvVars(envVars map[string]string, f func()) {
+	var tmp = make(map[string]string, len(envVars))
+	for key, value := range envVars {
+		tmp[key] = os.Getenv(key)
+		os.Setenv(key, value)
+	}
+
+	defer func() {
+		for key, value := range tmp {
+			os.Setenv(key, value)
+		}
+	}()
+
+	f()
+}
+
+func CaptureStdout(f func()) string {
+	r, w, err := os.Pipe()
+	Expect(err).ToNot(HaveOccurred())
+
+	tmp := os.Stdout
+	defer func() {
+		os.Stdout = tmp
+	}()
+
+	os.Stdout = w
+	f()
+	w.Close()
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+
+	return buf.String()
+}
+
 var _ = Describe("term package", func() {
 	Context("detection functions that base on environment variables", func() {
-		var (
-			term string
-		)
-
-		BeforeEach(func() {
-			term = os.Getenv("TERM")
-		})
-
-		AfterEach(func() {
-			os.Setenv("TERM", term)
-		})
-
 		It("should return that it is a dumb terminal, if the environment is set to dumb", func() {
-			os.Setenv("TERM", "dumb")
-			Expect(IsDumbTerminal()).To(BeTrue())
+			WithCustomEnvVars(map[string]string{"TERM": "dumb"}, func() {
+				Expect(IsDumbTerminal()).To(BeTrue())
+			})
+		})
+
+		It("should detect truecolor support", func() {
+			WithCustomEnvVars(map[string]string{"COLORTERM": "truecolor"}, func() {
+				Expect(IsTrueColor()).To(BeTrue())
+			})
+
+			WithCustomEnvVars(map[string]string{"COLORTERM": "24bit"}, func() {
+				Expect(IsTrueColor()).To(BeTrue())
+			})
+
+			WithCustomEnvVars(map[string]string{"COLORTERM": "foobar"}, func() {
+				Expect(IsTrueColor()).To(BeFalse())
+			})
+
+			WithCustomEnvVars(map[string]string{"COLORTERM": ""}, func() {
+				Expect(IsTrueColor()).To(BeFalse())
+			})
+		})
+	})
+
+	Context("Concourse/Garden specific checks", func() {
+		It("should at least not panic when trying to detect the Garden init process", func() {
+			// Please note: Not sure why, but if one would run this test case
+			// in Concourse, it would fail. So, please do not.
+			Expect(IsGardenContainer()).To(BeFalse())
+		})
+	})
+
+	Context("cursor hide and show convenience", func() {
+		It("should print the right hide sequence to the Stdout", func() {
+			Expect(CaptureStdout(HideCursor)).To(Equal("\x1b[?25l"))
+		})
+
+		It("should print the right show sequence to the Stdout", func() {
+			Expect(CaptureStdout(ShowCursor)).To(Equal("\x1b[?25h"))
 		})
 	})
 })
