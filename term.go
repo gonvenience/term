@@ -30,7 +30,7 @@ import (
 
 	"github.com/mattn/go-isatty"
 	"github.com/mitchellh/go-ps"
-	terminal "golang.org/x/term"
+	"golang.org/x/term"
 )
 
 const (
@@ -80,7 +80,7 @@ func GetTerminalSize() (int, int) {
 		return FixedTerminalWidth, FixedTerminalHeight
 	}
 
-	width, height, err := terminal.GetSize(int(os.Stdout.Fd()))
+	width, height, err := term.GetSize(int(os.Stdout.Fd()))
 
 	switch {
 	// Return default fallback value
