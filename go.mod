@@ -6,7 +6,7 @@ require (
 	github.com/mattn/go-isatty v0.0.18
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/onsi/ginkgo/v2 v2.9.2
-	github.com/onsi/gomega v1.27.5
+	github.com/onsi/gomega v1.27.6
 	golang.org/x/term v0.6.0
 )
 
