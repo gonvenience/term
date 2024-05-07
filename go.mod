@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mitchellh/go-ps v1.0.0
-	github.com/onsi/ginkgo/v2 v2.17.2
+	github.com/onsi/ginkgo/v2 v2.17.3
 	github.com/onsi/gomega v1.33.1
 	golang.org/x/term v0.20.0
 )
