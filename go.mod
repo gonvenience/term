@@ -1,6 +1,6 @@
 module github.com/gonvenience/term
 
-go 1.20
+go 1.22.0
 
 require (
 	github.com/mattn/go-isatty v0.0.20
