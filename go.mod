@@ -7,7 +7,7 @@ require (
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
-	golang.org/x/term v0.39.0
+	golang.org/x/term v0.40.0
 )
 
 require (
